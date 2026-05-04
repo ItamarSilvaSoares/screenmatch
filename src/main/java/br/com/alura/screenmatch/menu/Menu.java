@@ -1,5 +1,8 @@
 package br.com.alura.screenmatch.menu;
 
+import br.com.alura.screenmatch.menu.command.Command;
+import br.com.alura.screenmatch.menu.command.CreatListCommand;
+import br.com.alura.screenmatch.menu.command.OperationId;
 import br.com.alura.screenmatch.model.ConverteDados;
 import br.com.alura.screenmatch.model.DadosEpisodio;
 import br.com.alura.screenmatch.model.DadosSerie;
@@ -21,7 +24,28 @@ public class Menu {
   private final ConsumoAPI consumo = new ConsumoAPI();
   private String nomeSerie;
 
-  public void exibirMenu(){
+  public void exibirMenu() {
+    Map<String, Command> comandos = CreatListCommand.create();
+
+    String opcao;
+
+    do {
+      comandos.forEach((_, c) -> System.out.println(c));
+      opcao = leitura.nextLine();
+      Command comando = comandos.get(opcao);
+
+      if (comando != null) {
+        comando.executar();
+        continue;
+      }
+
+      System.out.println("Opção Invalida");
+
+    } while (!opcao.equals(OperationId.EXIT.getOperationId()));
+  }
+
+  @Deprecated
+  public void exibirMenuOld() {
     IO.println("Digite o nome da série para a busca");
     this.nomeSerie = leitura.nextLine().trim();
 
@@ -33,19 +57,17 @@ public class Menu {
 
     List<DadosTemporada> temporadas = new ArrayList<>();
 
-    for(int i = 1; i<=dados.totalTemporadas(); i++) {
+    for (int i = 1; i <= dados.totalTemporadas(); i++) {
       json = consumo.obterDados(getUrl("&season=" + i));
       DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
       temporadas.add(dadosTemporada);
-
     }
     temporadas.forEach(IO::println);
 
     temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
 
-    List<DadosEpisodio> dadosEpisodios = temporadas.stream()
-        .flatMap(t -> t.episodios().stream())
-        .toList();
+    List<DadosEpisodio> dadosEpisodios =
+        temporadas.stream().flatMap(t -> t.episodios().stream()).toList();
 
     System.out.println("\nTop 5 episódios");
     dadosEpisodios.stream()
@@ -54,10 +76,10 @@ public class Menu {
         .limit(5)
         .forEach(System.out::println);
 
-    List<Episodio> episodios = temporadas.stream()
-        .flatMap(t -> t.episodios().stream()
-            .map(d -> new Episodio(t.season(), d)))
-        .toList();
+    List<Episodio> episodios =
+        temporadas.stream()
+            .flatMap(t -> t.episodios().stream().map(d -> new Episodio(t.season(), d)))
+            .toList();
 
     episodios.forEach(System.out::println);
 
@@ -71,20 +93,28 @@ public class Menu {
 
     episodios.stream()
         .filter(e -> e.getDataLancamento() != null && e.getDataLancamento().isAfter(dataBusca))
-        .forEach(e -> System.out.println(
-            "Temporada:  " + e.getTemporada() +
-                " Episódio: " + e.getTitulo() +
-                " Data lançamento: " + e.getDataLancamento().format(formatador)
-        ));
+        .forEach(
+            e ->
+                System.out.println(
+                    "Temporada:  "
+                        + e.getTemporada()
+                        + " Episódio: "
+                        + e.getTitulo()
+                        + " Data lançamento: "
+                        + e.getDataLancamento().format(formatador)));
 
-    Map<Integer, Double> avaliacoesPorTemporada = episodios.stream()
-        .filter(e -> e.getAvaliacao() > 0.0)
-        .collect(Collectors.groupingBy(Episodio::getTemporada, Collectors.averagingDouble(Episodio::getAvaliacao)));
+    Map<Integer, Double> avaliacoesPorTemporada =
+        episodios.stream()
+            .filter(e -> e.getAvaliacao() > 0.0)
+            .collect(
+                Collectors.groupingBy(
+                    Episodio::getTemporada, Collectors.averagingDouble(Episodio::getAvaliacao)));
     System.out.println(avaliacoesPorTemporada);
 
-    DoubleSummaryStatistics est = episodios.stream()
-        .filter(e -> e.getAvaliacao() > 0.0)
-        .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));
+    DoubleSummaryStatistics est =
+        episodios.stream()
+            .filter(e -> e.getAvaliacao() > 0.0)
+            .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));
     System.out.println("Média: " + est.getAverage());
     System.out.println("Melhor episódio: " + est.getMax());
     System.out.println("Pior episódio: " + est.getMin());
@@ -94,9 +124,6 @@ public class Menu {
   private String getUrl(String toConcatenate) {
     String ENDERECO = "https://www.omdbapi.com/?t=";
     String API_KEY = "&apikey=75c11b36";
-    return ENDERECO
-        + this.nomeSerie.replace(" ", "+")
-        + toConcatenate
-        + API_KEY;
+    return ENDERECO + this.nomeSerie.replace(" ", "+") + toConcatenate + API_KEY;
   }
 }
