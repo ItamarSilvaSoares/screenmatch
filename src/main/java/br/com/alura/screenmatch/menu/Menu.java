@@ -9,6 +9,7 @@ import br.com.alura.screenmatch.model.DadosSerie;
 import br.com.alura.screenmatch.model.DadosTemporada;
 import br.com.alura.screenmatch.model.Episodio;
 import br.com.alura.screenmatch.service.ConsumoAPI;
+import io.github.cdimascio.dotenv.Dotenv;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class Menu {
         continue;
       }
 
-      System.out.println("Opção Invalida");
+      System.out.println("\nOpção Invalida\n");
 
     } while (!opcao.equals(OperationId.EXIT.getOperationId()));
   }
@@ -51,7 +52,7 @@ public class Menu {
 
     var json = consumo.obterDados(getUrl(""));
     ConverteDados conversor = new ConverteDados();
-    DadosSerie dados = conversor.obterDados(json, DadosSerie.class);
+    DadosSerie dados = conversor.obterDados(json.asString(), DadosSerie.class);
 
     IO.println(dados);
 
@@ -59,7 +60,7 @@ public class Menu {
 
     for (int i = 1; i <= dados.totalTemporadas(); i++) {
       json = consumo.obterDados(getUrl("&season=" + i));
-      DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
+      DadosTemporada dadosTemporada = conversor.obterDados(json.asString(), DadosTemporada.class);
       temporadas.add(dadosTemporada);
     }
     temporadas.forEach(IO::println);
@@ -122,8 +123,9 @@ public class Menu {
   }
 
   private String getUrl(String toConcatenate) {
+    Dotenv dotenv = Dotenv.load();
     String ENDERECO = "https://www.omdbapi.com/?t=";
-    String API_KEY = "&apikey=75c11b36";
+    String API_KEY = dotenv.get("API_KEY");
     return ENDERECO + this.nomeSerie.replace(" ", "+") + toConcatenate + API_KEY;
   }
 }

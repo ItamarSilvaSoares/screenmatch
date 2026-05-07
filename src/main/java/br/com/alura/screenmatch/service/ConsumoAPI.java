@@ -5,21 +5,21 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 public class ConsumoAPI {
-  public String obterDados(String endereco) {
+  public JsonNode obterDados(String endereco) {
     HttpClient client = HttpClient.newHttpClient();
-    HttpRequest request = HttpRequest.newBuilder()
-        .uri(URI.create(endereco))
-        .build();
-    HttpResponse<String> response = null;
+    HttpRequest request = HttpRequest.newBuilder().uri(URI.create(endereco)).build();
+    HttpResponse<String> response;
     try {
-      response = client
-          .send(request, HttpResponse.BodyHandlers.ofString());
+      response = client.send(request, HttpResponse.BodyHandlers.ofString());
     } catch (IOException | InterruptedException e) {
       throw new RuntimeException(e);
     }
 
-    return response.body();
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.readTree(response.body());
   }
 }

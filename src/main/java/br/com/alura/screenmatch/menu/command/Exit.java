@@ -1,14 +1,14 @@
 package br.com.alura.screenmatch.menu.command;
 
-public class Sair extends Command {
+@Nome("Sair")
+public class Exit extends Command {
 
-  public Sair() {
-    super(OperationId.EXIT.getOperationId(), Sair.class);
+  public Exit() {
+    super(OperationId.EXIT.getOperationId(), Exit.class, null);
   }
 
   @Override
   public void executar() {
     System.out.println("Saindo....");
-
   }
 }

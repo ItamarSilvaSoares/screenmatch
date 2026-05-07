@@ -1,12 +1,16 @@
 package br.com.alura.screenmatch.menu.command;
 
+import br.com.alura.screenmatch.service.SearchSerieEngine;
+
 public abstract class Command {
   protected String operationId;
   protected String description;
+  protected SearchSerieEngine searchSerieEngine;
 
-  public Command(String operationId, Class<?> clazz) {
+  public Command(String operationId, Class<?> clazz, SearchSerieEngine searchSerieEngine) {
     this.operationId = operationId;
     this.description = getDescription(clazz);
+    this.searchSerieEngine = searchSerieEngine;
   }
 
   private String getDescription(Class<?> clazz) {
