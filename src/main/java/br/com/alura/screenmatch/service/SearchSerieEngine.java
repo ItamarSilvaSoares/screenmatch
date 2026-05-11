@@ -9,14 +9,15 @@ import java.util.Optional;
 import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
 
+@Component
 public class SearchSerieEngine {
   private static final Logger log = LoggerFactory.getLogger(SearchSerieEngine.class);
-  private final Dotenv dotenv = Dotenv.load();
   private final Scanner scanner = new Scanner(System.in);
   private final ConsumoAPI consumo = new ConsumoAPI();
-  private final String API_KEY = dotenv.get("API_KEY");
+  private final String API_KEY = Dotenv.load().get("API_KEY");
   private final ConverteDados conversor = new ConverteDados();
   private final List<DadosSerie> dadosSeries = new ArrayList<>();
 

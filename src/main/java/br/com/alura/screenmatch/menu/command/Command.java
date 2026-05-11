@@ -29,4 +29,8 @@ public abstract class Command {
   public String toString() {
     return this.operationId + " - " + this.description;
   }
+
+  public String getOperationId() {
+    return operationId;
+  }
 }

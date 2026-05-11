@@ -19,14 +19,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Menu {
+  private final CreatListCommand listCommand;
   private final Scanner leitura = new Scanner(System.in);
   private final ConsumoAPI consumo = new ConsumoAPI();
   private String nomeSerie;
 
+  public Menu(CreatListCommand listCommand) {
+    this.listCommand = listCommand;
+  }
+
   public void exibirMenu() {
-    Map<String, Command> comandos = CreatListCommand.create();
+    Map<String, Command> comandos = this.listCommand.create();
 
     String opcao;
 

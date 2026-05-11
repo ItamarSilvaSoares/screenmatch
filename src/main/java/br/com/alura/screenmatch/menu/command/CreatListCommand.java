@@ -1,23 +1,20 @@
 package br.com.alura.screenmatch.menu.command;
 
-import br.com.alura.screenmatch.service.SearchSerieEngine;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CreatListCommand {
-  public static Map<String, Command> create() {
-    Map<String, Command> comandos = new LinkedHashMap<>();
 
-    SearchSerieEngine searchSerieEngine = new SearchSerieEngine();
+  private final List<Command> commands;
 
-    comandos.put(OperationId.SEARCH_SERIE.getOperationId(), new SearchSeries(searchSerieEngine));
-    comandos.put(
-        OperationId.SEARCH_EPISODE.getOperationId(), new SearchEpisodes(searchSerieEngine));
-    comandos.put(
-        OperationId.LIST_SERIE.getOperationId(), new ListSeriesSearched(searchSerieEngine));
+  public CreatListCommand(List<Command> commands) {
+    this.commands = commands;
+  }
 
-    comandos.put(OperationId.EXIT.getOperationId(), new Exit());
-
-    return comandos;
+  public Map<String, Command> create() {
+    return commands.stream().collect(Collectors.toMap(Command::getOperationId, c -> c));
   }
 }
