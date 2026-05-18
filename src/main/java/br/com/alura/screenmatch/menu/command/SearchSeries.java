@@ -1,17 +1,19 @@
 package br.com.alura.screenmatch.menu.command;
 
+import br.com.alura.screenmatch.model.Serie;
 import br.com.alura.screenmatch.service.SearchSerieEngine;
 import br.com.alura.screenmatch.service.SerieService;
+import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
 @Nome("Buscar Séries")
 public class SearchSeries extends Command {
-  private final SearchSerieEngine searchSerieEngine;
   private final SerieService serieService;
+  private final SearchSerieEngine searchSerieEngine;
 
   public SearchSeries(SearchSerieEngine searchSerieEngine, SerieService serieService) {
-    super(OperationId.SEARCH_SERIE.getOperationId(), SearchSeries.class, searchSerieEngine);
+    super(OperationId.SEARCH_SERIE.getOperationId(), SearchSeries.class);
 
     this.searchSerieEngine = searchSerieEngine;
     this.serieService = serieService;
@@ -19,7 +21,8 @@ public class SearchSeries extends Command {
 
   @Override
   public void executar() {
-    this.searchSerieEngine.search();
-    this.serieService.salvar(this.searchSerieEngine.getDadosSeries());
+    final Optional<Serie> serie = this.searchSerieEngine.searchSerie();
+
+    serie.ifPresent(this.serieService::salvar);
   }
 }
