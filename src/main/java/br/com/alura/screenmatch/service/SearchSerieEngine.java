@@ -5,8 +5,6 @@ import br.com.alura.screenmatch.model.DadosSerie;
 import br.com.alura.screenmatch.model.DadosTemporada;
 import br.com.alura.screenmatch.model.Serie;
 import io.github.cdimascio.dotenv.Dotenv;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import org.slf4j.Logger;
@@ -17,10 +15,14 @@ import tools.jackson.databind.JsonNode;
 @Component
 public class SearchSerieEngine {
   private static final Logger log = LoggerFactory.getLogger(SearchSerieEngine.class);
-  private final Scanner scanner = new Scanner(System.in);
+  private final Scanner scanner;
   private final ConsumoAPI consumo = new ConsumoAPI();
   private final Dotenv dotenv = Dotenv.load();
   private final ConverteDados conversor = new ConverteDados();
+
+  public SearchSerieEngine(Scanner scanner) {
+    this.scanner = scanner;
+  }
 
   public Optional<Serie> searchSerie() {
     String nomeSerie = getInput("Digite o nome da série para a busca");
@@ -37,7 +39,7 @@ public class SearchSerieEngine {
 
   public String getInput(String informativeText) {
     IO.println(informativeText);
-    return scanner.nextLine();
+    return this.scanner.nextLine();
   }
 
   public DadosTemporada searchEpisode(SeasonHelper seasonHelper) {
