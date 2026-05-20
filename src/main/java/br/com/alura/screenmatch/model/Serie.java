@@ -16,8 +16,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalDouble;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "series")
 public class Serie {
   @Id
@@ -42,10 +49,8 @@ public class Serie {
   private String sinopse;
 
   @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  //  @Setter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
   private List<Episodio> episodios = new ArrayList<>();
-
-  public Serie() {}
 
   public Serie(DadosSerie dados) {
     this.titulo = dados.titulo();
@@ -88,73 +93,5 @@ public class Serie {
       episodios.forEach(e -> e.setSerie(this));
     }
     this.episodios = episodios;
-  }
-
-  public long getId() {
-    return id;
-  }
-
-  public void setId(long id) {
-    this.id = id;
-  }
-
-  public String getTitulo() {
-    return titulo;
-  }
-
-  public void setTitulo(String titulo) {
-    this.titulo = titulo;
-  }
-
-  public Integer getTotalTemporadas() {
-    return totalTemporadas;
-  }
-
-  public void setTotalTemporadas(Integer totalTemporadas) {
-    this.totalTemporadas = totalTemporadas;
-  }
-
-  public Double getAvaliacao() {
-    return avaliacao;
-  }
-
-  public void setAvaliacao(Double avaliacao) {
-    this.avaliacao = avaliacao;
-  }
-
-  public Categoria getGenero() {
-    return genero;
-  }
-
-  public void setGenero(Categoria genero) {
-    this.genero = genero;
-  }
-
-  public String[] getAtores() {
-    return atores;
-  }
-
-  public void setAtores(String[] atores) {
-    this.atores = atores;
-  }
-
-  public String getPoster() {
-    return poster;
-  }
-
-  public void setPoster(String poster) {
-    this.poster = poster;
-  }
-
-  public String getSinopse() {
-    return sinopse;
-  }
-
-  public void setSinopse(String sinopse) {
-    this.sinopse = sinopse;
-  }
-
-  public List<Episodio> getEpisodios() {
-    return episodios;
   }
 }

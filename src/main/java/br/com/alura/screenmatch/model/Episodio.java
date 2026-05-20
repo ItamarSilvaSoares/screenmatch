@@ -8,8 +8,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "episodios")
 public class Episodio {
 
@@ -23,8 +29,6 @@ public class Episodio {
   private Double avaliacao;
   private LocalDate dataLancamento;
   @ManyToOne private Serie serie;
-
-  public Episodio() {}
 
   public Episodio(Integer numeroTemporada, DadosEpisodio dadosEpisodio) {
     this.temporada = numeroTemporada;
@@ -57,61 +61,5 @@ public class Episodio {
         + avaliacao
         + ", dataLançamento="
         + dataLancamento;
-  }
-
-  public long getId() {
-    return id;
-  }
-
-  public void setId(long id) {
-    this.id = id;
-  }
-
-  public Integer getTemporada() {
-    return temporada;
-  }
-
-  public void setTemporada(Integer temporada) {
-    this.temporada = temporada;
-  }
-
-  public String getTitulo() {
-    return titulo;
-  }
-
-  public void setTitulo(String titulo) {
-    this.titulo = titulo;
-  }
-
-  public Integer getNumeroEpisodio() {
-    return numeroEpisodio;
-  }
-
-  public void setNumeroEpisodio(Integer numeroEpisodio) {
-    this.numeroEpisodio = numeroEpisodio;
-  }
-
-  public Double getAvaliacao() {
-    return avaliacao;
-  }
-
-  public void setAvaliacao(Double avaliacao) {
-    this.avaliacao = avaliacao;
-  }
-
-  public LocalDate getDataLancamento() {
-    return dataLancamento;
-  }
-
-  public void setDataLancamento(LocalDate dataLancamento) {
-    this.dataLancamento = dataLancamento;
-  }
-
-  public Serie getSerie() {
-    return serie;
-  }
-
-  public void setSerie(Serie serie) {
-    this.serie = serie;
   }
 }

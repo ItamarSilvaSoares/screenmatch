@@ -1,20 +1,21 @@
 services:
   app:
-    image: docker.io/eclipse-temurin:21-jdk
+    image: docker.io/eclipse-temurin:25-jdk
     container_name: java_app
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
+    #    dns:
+    #      - 8.8.8.8
+    #      - 1.1.1.1
     ports:
       - "8080:8080"
     volumes:
       - .:/app
     working_dir: /app
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/alura_series
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
-    command: ./gradlew bootRun
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+    command: sh -c "chmod +x ./gradlew && ./gradlew bootRun"
     depends_on:
       db:
         condition: service_healthy
@@ -26,17 +27,18 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=alura_series
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
       - TZ=America/Sao_Paulo
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d alura_series" ]
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
       interval: 5s
       timeout: 5s
       retries: 5
+      start_period: 10s
 
 volumes:
   postgres_data:
