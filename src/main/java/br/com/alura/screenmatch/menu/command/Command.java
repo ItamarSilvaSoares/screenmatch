@@ -1,32 +1,20 @@
 package br.com.alura.screenmatch.menu.command;
 
+import lombok.Getter;
+
 public abstract class Command {
-  protected String operationId;
+  @Getter protected String operationId;
   protected String description;
 
-  protected Command(String operationId, Class<?> clazz) {
+  protected Command(String operationId, String description) {
     this.operationId = operationId;
-    this.description = getDescription(clazz);
+    this.description = description;
   }
 
-  private String getDescription(Class<?> clazz) {
-    Nome nome = clazz.getAnnotation(Nome.class);
-
-    return nome != null ? nome.value() : formatDescription(clazz.getSimpleName());
-  }
-
-  private String formatDescription(String description) {
-    return description.replaceAll("(?<!^)([A-Z])", " $1");
-  }
-
-  public abstract void executar();
+    public abstract void executar();
 
   @Override
   public String toString() {
     return this.operationId + " - " + this.description;
-  }
-
-  public String getOperationId() {
-    return operationId;
   }
 }

@@ -13,13 +13,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalDouble;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Getter
@@ -41,8 +42,8 @@ public class Serie {
   @Enumerated(EnumType.STRING)
   private Categoria genero;
 
-  @Column(columnDefinition = "text[]")
-  private String[] atores;
+  @JdbcTypeCode(SqlTypes.ARRAY)
+  private List<String> atores;
 
   private String poster;
 
@@ -57,7 +58,7 @@ public class Serie {
     this.totalTemporadas = dados.totalTemporadas();
     this.avaliacao = OptionalDouble.of(Double.parseDouble(dados.avaliacao())).orElse(0.0);
     this.genero = Categoria.fromString(dados.genero().split(",")[0].trim());
-    this.atores = dados.atores().split(",\\s*");
+    this.atores = List.of(dados.atores().split(",\\s*"));
 
     String sinopseTraduzida = ConsultaMyMemory.obterTraducao(dados.sinopse()).trim();
     this.sinopse = sinopseTraduzida.isEmpty() ? dados.sinopse() : sinopseTraduzida;
@@ -66,26 +67,18 @@ public class Serie {
 
   @Override
   public String toString() {
-    return "gênero: "
-        + genero
-        + ", titulo: '"
+    return "titulo: '"
         + titulo
+        + '\''
+        + ", gênero: "
+        + genero
         + '\''
         + ", totalTemporadas: "
         + totalTemporadas
         + ", avaliação: "
         + avaliacao
-        + ", atores: "
-        + Arrays.toString(atores)
-        + ", poster: '"
-        + poster
-        + '\''
-        + ", sinopse: '"
-        + sinopse
-        + '\''
-        + ", episódios: '"
-        + episodios
         + '\'';
+
   }
 
   public void setEpisodios(List<Episodio> episodios) {

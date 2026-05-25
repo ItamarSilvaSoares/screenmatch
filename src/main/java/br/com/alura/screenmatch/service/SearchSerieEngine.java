@@ -7,14 +7,13 @@ import br.com.alura.screenmatch.model.Serie;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.util.Optional;
 import java.util.Scanner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
 
+@Slf4j
 @Component
 public class SearchSerieEngine {
-  private static final Logger log = LoggerFactory.getLogger(SearchSerieEngine.class);
   private final Scanner scanner;
   private final ConsumoAPI consumo = new ConsumoAPI();
   private final Dotenv dotenv = Dotenv.load();

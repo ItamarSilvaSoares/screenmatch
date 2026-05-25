@@ -3,13 +3,12 @@ package br.com.alura.screenmatch.service.translation;
 import br.com.alura.screenmatch.service.ConsumoAPI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
+@Slf4j
 public class ConsultaMyMemory {
-  private static final Logger log = LoggerFactory.getLogger(ConsultaMyMemory.class);
 
   public static String obterTraducao(String text) {
     ObjectMapper mapper = new ObjectMapper();

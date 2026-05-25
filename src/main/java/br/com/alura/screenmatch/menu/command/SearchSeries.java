@@ -7,13 +7,12 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
-@Nome("Buscar Séries")
 public class SearchSeries extends Command {
   private final SerieService serieService;
   private final SearchSerieEngine searchSerieEngine;
 
   public SearchSeries(SearchSerieEngine searchSerieEngine, SerieService serieService) {
-    super(OperationId.SEARCH_SERIE.getOperationId(), SearchSeries.class);
+    super(OperationId.SEARCH_SERIE.getOperationId(), OperationId.SEARCH_SERIE.getDescription());
 
     this.searchSerieEngine = searchSerieEngine;
     this.serieService = serieService;

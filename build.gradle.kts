@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("tools.jackson.core:jackson-databind:3.1.3")
+    implementation("tools.jackson.core:jackson-databind")
     implementation("io.github.cdimascio:dotenv-java:3.2.0")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
