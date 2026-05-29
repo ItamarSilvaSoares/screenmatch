@@ -14,6 +14,9 @@ public enum OperationId {
   TOP_FIVE_SERIE("6", "Top 5 Séries"),
   SEARCH_BY_CATEGORIA("7", "Buscar séries por categoria"),
   SEARCH_BY_SEASON("8", "Buscar séries por temporadas e avaliação"),
+  SEARCH_EPISODE_BY_SEGMENT("9", "Buscar Episódio Por Trecho"),
+  TOP_EPISODES_BY_SERIE("10", "top 5 Episódios Por Série"),
+  SEARCH_EPISODE_BY_DATE("11", "Buscar episódios a partir de uma data"),
   EXIT("0", "Sair");
 
   private final String operationId;

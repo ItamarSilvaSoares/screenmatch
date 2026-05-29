@@ -9,7 +9,7 @@ public class ListSeriesSearched extends Command {
   private final SerieService serieService;
 
   public ListSeriesSearched(SerieService serieService) {
-    super(OperationId.LIST_SERIE.getOperationId(), OperationId.LIST_SERIE.getDescription());
+    super(null, OperationId.LIST_SERIE.getOperationId(), OperationId.LIST_SERIE.getDescription());
     this.serieService = serieService;
   }
 

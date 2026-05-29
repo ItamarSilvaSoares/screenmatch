@@ -3,6 +3,7 @@ package br.com.alura.screenmatch.menu;
 import br.com.alura.screenmatch.menu.command.Command;
 import br.com.alura.screenmatch.menu.command.CreatListCommand;
 import br.com.alura.screenmatch.menu.command.OperationId;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Scanner;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,9 @@ public class Menu {
     String opcao;
 
     do {
-      comandos.forEach((_, c) -> System.out.println(c));
+      comandos.entrySet().stream()
+          .sorted(Comparator.comparing(e -> Integer.parseInt(e.getKey())))
+          .forEach((c) -> System.out.println(c.getValue()));
 
       opcao = this.scanner.nextLine();
 

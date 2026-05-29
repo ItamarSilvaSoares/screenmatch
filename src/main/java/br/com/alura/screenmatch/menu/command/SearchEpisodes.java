@@ -20,7 +20,10 @@ public class SearchEpisodes extends Command {
   private final SearchSerieEngine searchSerieEngine;
 
   public SearchEpisodes(SerieService serieService, SearchSerieEngine searchSerieEngine) {
-    super(OperationId.SEARCH_EPISODE.getOperationId(), OperationId.SEARCH_EPISODE.getDescription());
+    super(
+        null,
+        OperationId.SEARCH_EPISODE.getOperationId(),
+        OperationId.SEARCH_EPISODE.getDescription());
     this.serieService = serieService;
     this.searchSerieEngine = searchSerieEngine;
   }

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -60,7 +59,7 @@ public class SerieService {
 
   public List<Serie> topFive() {
     Specification<Serie> spec = SerieSpecs.conjunctionZero();
-    Pageable pageable = PageRequest.of(0, 5, sortByRating(Direction.DESC));
+    Pageable pageable = ServiceHelper.top5();
     return this.repository.findAll(spec, pageable).getContent();
   }
 
@@ -69,19 +68,12 @@ public class SerieService {
     return this.repository.findAll(spec);
   }
 
-  private Sort sortByRating(Sort.Direction direction) {
-    if (direction == Sort.Direction.DESC) {
-      return Sort.by(Sort.Order.desc("avaliacao").nullsLast());
-    }
-    return Sort.by(Sort.Order.asc("avaliacao").nullsLast());
-  }
-
   public List<Serie> searchBySeasonsAndRating(int seasons, Double rating) {
     Specification<Serie> spec =
         Specification.where(SerieSpecs.seasonLessThanOrEqualTo(seasons))
             .and(SerieSpecs.avaliacaoGreaterOrIgualTo(rating));
 
-    Sort sort = sortByRating(Direction.DESC);
+    Sort sort = ServiceHelper.sort(Direction.DESC, "avaliacao");
 
     return this.repository.findAll(spec, sort);
   }

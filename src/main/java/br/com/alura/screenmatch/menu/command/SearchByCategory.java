@@ -11,28 +11,30 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class SearchByCategory extends Command {
-  private final Scanner scanner;
   private final SerieService serieService;
 
   protected SearchByCategory(Scanner scanner, SerieService serieService) {
     super(
+        scanner,
         OperationId.SEARCH_BY_CATEGORIA.getOperationId(),
         OperationId.SEARCH_BY_CATEGORIA.getDescription());
 
-    this.scanner = scanner;
     this.serieService = serieService;
   }
 
   @Override
   public void executar() {
     System.out.println("Digite o nome do categoria: ");
-    String text = scanner.nextLine();
+    String text = this.getString();
 
     try {
       Categoria categoria = Categoria.fromPortugues(text);
+
       List<Serie> serieList = this.serieService.searchByCategory(categoria);
+
       System.out.println("Lista de serie: ");
       serieList.forEach(System.out::println);
+
     } catch (IllegalArgumentException e) {
       log.error(e.getMessage());
     }

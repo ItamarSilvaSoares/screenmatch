@@ -8,58 +8,51 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class SerieSpecs {
   public static Specification<Serie> tituloContensIgnoreCase(String titulo) {
-    return (root, _, criteriaBuilder) ->
+    return (root, _, cb) ->
         Optional.ofNullable(titulo)
             .filter(t -> !t.isBlank())
-            .map(
-                t ->
-                    criteriaBuilder.like(
-                        criteriaBuilder.lower(root.get("titulo")), "%" + t.toLowerCase() + "%"))
-            .orElseGet(criteriaBuilder::conjunction);
+            .map(t -> cb.like(cb.lower(root.get("titulo")), "%" + t.toLowerCase() + "%"))
+            .orElseGet(cb::conjunction);
   }
 
   public static Specification<Serie> seasonLessThanOrEqualTo(int seasons) {
-    return (root, _, criteriaBuilder) ->
+    return (root, _, cb) ->
         Optional.of(seasons)
             .filter(i -> !(i < 1))
-            .map(i -> criteriaBuilder.lessThanOrEqualTo(root.get("totalTemporadas"), i))
-            .orElseGet(criteriaBuilder::conjunction);
+            .map(i -> cb.lessThanOrEqualTo(root.get("totalTemporadas"), i))
+            .orElseGet(cb::conjunction);
   }
 
   public static Specification<Serie> atorContensIgnoreCase(String actorName) {
-    return (root, _, criteriaBuilder) ->
+    return (root, _, cb) ->
         Optional.ofNullable(actorName)
             .filter(n -> !n.isBlank())
             .map(
                 n -> {
                   Expression<String> atoresComoString =
-                      criteriaBuilder.function(
-                          "array_to_string",
-                          String.class,
-                          root.get("atores"),
-                          criteriaBuilder.literal(","));
-                  return criteriaBuilder.like(
-                      criteriaBuilder.lower(atoresComoString), "%" + n.toLowerCase() + "%");
+                      cb.function(
+                          "array_to_string", String.class, root.get("atores"), cb.literal(","));
+                  return cb.like(cb.lower(atoresComoString), "%" + n.toLowerCase() + "%");
                 })
-            .orElseGet(criteriaBuilder::conjunction);
+            .orElseGet(cb::conjunction);
   }
 
   public static Specification<Serie> avaliacaoGreaterOrIgualTo(Double rating) {
-    return (root, _, criteriaBuilder) ->
+    return (root, _, cb) ->
         Optional.of(rating)
-            .filter(s -> !s.isNaN())
-            .map(r -> criteriaBuilder.greaterThanOrEqualTo(root.get("avaliacao"), r))
-            .orElseGet(criteriaBuilder::conjunction);
+            .filter(s -> !s.isNaN() | !(s == 0.0))
+            .map(r -> cb.greaterThanOrEqualTo(root.get("avaliacao"), r))
+            .orElseGet(cb::conjunction);
   }
 
   public static Specification<Serie> categoriaFiltro(Categoria categoria) {
-    return (root, _, criteriaBuilder) ->
+    return (root, _, cb) ->
         Optional.ofNullable(categoria)
-            .map(c -> criteriaBuilder.and(criteriaBuilder.equal(root.get("genero"), c)))
-            .orElseGet(criteriaBuilder::conjunction);
+            .map(c -> cb.and(cb.equal(root.get("genero"), c)))
+            .orElseGet(cb::conjunction);
   }
 
   public static Specification<Serie> conjunctionZero() {
-    return (_, _, criteriaBuilder) -> criteriaBuilder.conjunction();
+    return (_, _, cb) -> cb.conjunction();
   }
 }

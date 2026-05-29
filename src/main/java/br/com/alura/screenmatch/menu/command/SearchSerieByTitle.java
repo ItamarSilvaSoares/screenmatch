@@ -10,21 +10,20 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j // Cria a variável 'log' automaticamente para esta classe
 public class SearchSerieByTitle extends Command {
-  private final Scanner scanner;
   private final SerieService serieService;
 
   protected SearchSerieByTitle(Scanner scanner, SerieService serieService) {
     super(
+        scanner,
         OperationId.SEARCH_SERIE_BY_NAME.getOperationId(),
         OperationId.SEARCH_SERIE_BY_NAME.getDescription());
-    this.scanner = scanner;
     this.serieService = serieService;
   }
 
   @Override
   public void executar() {
     System.out.println("Escolha um série pelo nome: ");
-    String nome = this.scanner.nextLine();
+    String nome = this.getString();
 
     try {
       Serie serie = this.serieService.findByNameSerie(nome);

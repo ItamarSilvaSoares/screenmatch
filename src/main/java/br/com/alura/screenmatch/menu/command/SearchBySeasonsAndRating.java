@@ -8,14 +8,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SearchBySeasonsAndRating extends Command {
-  private final Scanner scanner;
   private final SerieService serieService;
 
   protected SearchBySeasonsAndRating(Scanner scanner, SerieService serieService) {
     super(
+        scanner,
         OperationId.SEARCH_BY_SEASON.getOperationId(),
         OperationId.SEARCH_BY_SEASON.getDescription());
-    this.scanner = scanner;
     this.serieService = serieService;
   }
 
@@ -33,21 +32,17 @@ public class SearchBySeasonsAndRating extends Command {
 
   private int getNumberOfSeasons() {
     int quantTemporadas = 50;
-    try {
-      String number = this.scanner.nextLine();
-      return Integer.parseInt(number);
-    } catch (NumberFormatException e) {
+
+    int number = this.getInt();
+
+    if (number == 0) {
       return quantTemporadas;
     }
+
+    return number;
   }
 
   private double getRatingSerie() {
-    double avaliacaoMinima = 0.0;
-    try {
-      String rating = this.scanner.nextLine();
-      return Double.parseDouble(rating);
-    } catch (NumberFormatException e) {
-      return avaliacaoMinima;
-    }
+    return this.getDouble();
   }
 }

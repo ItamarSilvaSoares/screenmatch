@@ -12,7 +12,8 @@ public class SearchSeries extends Command {
   private final SearchSerieEngine searchSerieEngine;
 
   public SearchSeries(SearchSerieEngine searchSerieEngine, SerieService serieService) {
-    super(OperationId.SEARCH_SERIE.getOperationId(), OperationId.SEARCH_SERIE.getDescription());
+    super(
+        null, OperationId.SEARCH_SERIE.getOperationId(), OperationId.SEARCH_SERIE.getDescription());
 
     this.searchSerieEngine = searchSerieEngine;
     this.serieService = serieService;

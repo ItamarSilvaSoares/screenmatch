@@ -10,7 +10,10 @@ public class TopFiveSerie extends Command {
   private final SerieService serieService;
 
   protected TopFiveSerie(SerieService serieService) {
-    super(OperationId.TOP_FIVE_SERIE.getOperationId(), OperationId.TOP_FIVE_SERIE.getDescription());
+    super(
+        null,
+        OperationId.TOP_FIVE_SERIE.getOperationId(),
+        OperationId.TOP_FIVE_SERIE.getDescription());
     this.serieService = serieService;
   }
 
