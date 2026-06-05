@@ -1,4 +1,4 @@
-package br.com.alura.screenmatch.repository.specifications;
+package br.com.alura.screenmatch.repositories.specifications;
 
 import br.com.alura.screenmatch.model.Categoria;
 import br.com.alura.screenmatch.model.Serie;
@@ -48,6 +48,7 @@ public class SerieSpecs {
   public static Specification<Serie> categoriaFiltro(Categoria categoria) {
     return (root, _, cb) ->
         Optional.ofNullable(categoria)
+            .filter(c -> c != Categoria.EMPTY)
             .map(c -> cb.and(cb.equal(root.get("genero"), c)))
             .orElseGet(cb::conjunction);
   }

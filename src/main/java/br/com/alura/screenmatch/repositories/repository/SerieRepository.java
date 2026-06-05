@@ -1,4 +1,4 @@
-package br.com.alura.screenmatch.repository;
+package br.com.alura.screenmatch.repositories.repository;
 
 import br.com.alura.screenmatch.model.Serie;
 import org.springframework.data.jpa.repository.JpaRepository;

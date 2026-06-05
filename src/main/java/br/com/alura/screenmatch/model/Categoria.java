@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum Categoria {
+  EMPTY("", ""),
   ACAO("Action", "Ação"),
   ROMANCE("Romance", "Romance"),
   COMEDIA("Comedy", "Comédia"),

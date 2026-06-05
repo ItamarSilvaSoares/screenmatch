@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 public class Exit extends Command {
 
   public Exit() {
-    super(null, OperationId.EXIT.getOperationId(), OperationId.EXIT.getDescription());
+    super(OperationId.EXIT.getOperationId(), OperationId.EXIT.getDescription());
   }
 
   @Override

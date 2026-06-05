@@ -11,7 +11,7 @@ public class TopFiveSerie extends Command {
 
   protected TopFiveSerie(SerieService serieService) {
     super(
-        null,
+
         OperationId.TOP_FIVE_SERIE.getOperationId(),
         OperationId.TOP_FIVE_SERIE.getDescription());
     this.serieService = serieService;

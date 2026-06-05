@@ -1,7 +1,9 @@
 package br.com.alura.screenmatch.model;
 
+import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
 
+@Component
 public class ConverteDados implements IConverteDados {
   private final ObjectMapper mapper = new ObjectMapper();
 

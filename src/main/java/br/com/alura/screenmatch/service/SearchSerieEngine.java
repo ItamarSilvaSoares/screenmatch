@@ -4,23 +4,30 @@ import br.com.alura.screenmatch.model.ConverteDados;
 import br.com.alura.screenmatch.model.DadosSerie;
 import br.com.alura.screenmatch.model.DadosTemporada;
 import br.com.alura.screenmatch.model.Serie;
-import io.github.cdimascio.dotenv.Dotenv;
 import java.util.Optional;
-import java.util.Scanner;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
 
 @Slf4j
 @Component
 public class SearchSerieEngine {
-  private final Scanner scanner;
-  private final ConsumoAPI consumo = new ConsumoAPI();
-  private final Dotenv dotenv = Dotenv.load();
-  private final ConverteDados conversor = new ConverteDados();
+  private final ConsoleReader reader;
+  private final ConsumoAPI consumo;
+  private final ConverteDados conversor;
 
-  public SearchSerieEngine(Scanner scanner) {
-    this.scanner = scanner;
+  @Value("${API_KEY}")
+  private final String API_KEY;
+
+  @Value("${OMDB_API_URL}")
+  private final String API_URL;
+
+  public SearchSerieEngine(ConsoleReader reader, ConsumoAPI consumo, ConverteDados conversor) {
+
+    this.reader = reader;
+    this.consumo = consumo;
+    this.conversor = conversor;
   }
 
   public Optional<Serie> searchSerie() {
@@ -38,7 +45,7 @@ public class SearchSerieEngine {
 
   public String getInput(String informativeText) {
     IO.println(informativeText);
-    return this.scanner.nextLine();
+    return this.reader.getString();
   }
 
   public DadosTemporada searchEpisode(SeasonHelper seasonHelper) {
@@ -47,12 +54,10 @@ public class SearchSerieEngine {
   }
 
   private String getUrl(SeasonHelper seasonSearch) {
-    String URL = dotenv.get("OMDB_API_URL");
-    String API_KEY = dotenv.get("API_KEY");
     String season =
         Optional.ofNullable(seasonSearch.getSeasonNumber()).map(num -> "&season=" + num).orElse("");
 
-    return URL + seasonSearch.getNomeSerie().replace(" ", "+") + season + API_KEY;
+    return this.API_URL + seasonSearch.getNomeSerie().replace(" ", "+") + season + this.API_KEY;
   }
 
   private boolean isSerieValid(JsonNode jsonNode) {

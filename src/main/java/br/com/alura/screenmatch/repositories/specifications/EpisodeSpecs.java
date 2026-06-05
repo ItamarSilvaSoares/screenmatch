@@ -1,4 +1,4 @@
-package br.com.alura.screenmatch.repository.specifications;
+package br.com.alura.screenmatch.repositories.specifications;
 
 import br.com.alura.screenmatch.model.Episodio;
 import br.com.alura.screenmatch.model.Serie;

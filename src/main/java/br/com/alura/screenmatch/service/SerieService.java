@@ -1,80 +1,110 @@
 package br.com.alura.screenmatch.service;
 
-import br.com.alura.screenmatch.exceptions.NotFoundSerieException;
 import br.com.alura.screenmatch.model.Categoria;
+import br.com.alura.screenmatch.model.DadosTemporada;
+import br.com.alura.screenmatch.model.Episodio;
 import br.com.alura.screenmatch.model.Serie;
-import br.com.alura.screenmatch.repository.SerieRepository;
-import br.com.alura.screenmatch.repository.specifications.SerieSpecs;
+import br.com.alura.screenmatch.repositories.SerieRepo;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class SerieService {
-  private final SerieRepository repository;
+  private SerieRepo serieRepo;
+  private final SearchSerieEngine searchSerieEngine;
 
-  public SerieService(SerieRepository repository) {
-    this.repository = repository;
-  }
-
-  public void salvar(Serie series) {
-
+  public void save(Serie serie) {
     try {
-      this.repository.save(series);
+      this.serieRepo.salvar(serie);
 
       log.info("Serie salva com sucesso");
 
     } catch (DataIntegrityViolationException e) {
       String msg =
           String.format(
-              "Erro ao salvar serie de dados, a serie %s já está no sistema.", series.getTitulo());
+              "Erro ao salvar serie de dados, a serie %s já está no sistema.", serie.getTitulo());
       log.error(msg);
     }
   }
 
   public List<Serie> findAll() {
-    return this.repository.findAll();
+    return this.serieRepo.findAll();
   }
 
-  public Serie findByNameSerie(String nameSerie) {
-    Specification<Serie> spec = SerieSpecs.tituloContensIgnoreCase(nameSerie);
-    Optional<Serie> optionalSerie = this.repository.findOne(spec);
+  public Optional<Serie> findSerieByName(String nomeSerie) {
 
-    return optionalSerie.orElseThrow(() -> new NotFoundSerieException(nameSerie));
+    Optional<Serie> serie = this.serieRepo.findByNameSerie(nomeSerie);
+
+    if (serie.isEmpty()) {
+      log.warn("Serie: {} não encontrado", nomeSerie);
+    }
+
+    return serie;
   }
 
-  public List<Serie> findByNomeActor(String nomeActor, Double rating) {
-    Specification<Serie> spec =
-        Specification.where(SerieSpecs.atorContensIgnoreCase(nomeActor))
-            .and(SerieSpecs.avaliacaoGreaterOrIgualTo(rating));
-    return this.repository.findAll(spec);
+  public void searchEpisodesSeries(String nomeSerie) {
+    Optional<Serie> serie = findSerieByName(nomeSerie);
+
+    serie.ifPresent(
+        s -> {
+          List<DadosTemporada> temporadas = new ArrayList<>();
+          for (int i = 1; i < s.getTotalTemporadas(); i++) {
+
+            DadosTemporada dadosTemporada =
+                searchSerieEngine.searchEpisode(SeasonHelper.of(i, s.getTitulo()));
+            temporadas.add(dadosTemporada);
+            List<Episodio> episodios =
+                temporadas.stream()
+                    .flatMap(d -> d.episodios().stream().map(e -> new Episodio(d.season(), e)))
+                    .toList();
+
+            s.setEpisodios(episodios);
+
+            this.serieRepo.salvar(s);
+          }
+        });
+  }
+
+  public List<Serie> searchByCategory(String text) {
+    Categoria categoria = Categoria.EMPTY;
+    try {
+      categoria = Categoria.fromPortugues(text);
+
+    } catch (IllegalArgumentException e) {
+      log.error(e.getMessage());
+    }
+
+    return this.serieRepo.searchByCategory(categoria);
+  }
+
+  public List<Serie> searchBySeasonsAndRating(int quantTemporadas, double avaliacaoMinima) {
+
+    return this.serieRepo.searchBySeasonsAndRating(
+        getNumberOfSeasons(quantTemporadas), avaliacaoMinima);
+  }
+
+  private int getNumberOfSeasons(int number) {
+    int quantTemporadas = 50;
+
+    if (number == 0) {
+      return quantTemporadas;
+    }
+
+    return number;
+  }
+
+  public List<Serie> findSeriesByNomeActor(String nome, double rating) {
+    return this.serieRepo.findByNomeActor(nome, rating);
   }
 
   public List<Serie> topFive() {
-    Specification<Serie> spec = SerieSpecs.conjunctionZero();
-    Pageable pageable = ServiceHelper.top5();
-    return this.repository.findAll(spec, pageable).getContent();
-  }
-
-  public List<Serie> searchByCategory(Categoria categoria) {
-    Specification<Serie> spec = SerieSpecs.categoriaFiltro(categoria);
-    return this.repository.findAll(spec);
-  }
-
-  public List<Serie> searchBySeasonsAndRating(int seasons, Double rating) {
-    Specification<Serie> spec =
-        Specification.where(SerieSpecs.seasonLessThanOrEqualTo(seasons))
-            .and(SerieSpecs.avaliacaoGreaterOrIgualTo(rating));
-
-    Sort sort = ServiceHelper.sort(Direction.DESC, "avaliacao");
-
-    return this.repository.findAll(spec, sort);
+    return this.serieRepo.topFive();
   }
 }

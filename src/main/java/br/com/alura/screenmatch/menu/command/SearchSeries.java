@@ -1,6 +1,7 @@
 package br.com.alura.screenmatch.menu.command;
 
 import br.com.alura.screenmatch.model.Serie;
+import br.com.alura.screenmatch.service.ConsoleReader;
 import br.com.alura.screenmatch.service.SearchSerieEngine;
 import br.com.alura.screenmatch.service.SerieService;
 import java.util.Optional;
@@ -12,8 +13,7 @@ public class SearchSeries extends Command {
   private final SearchSerieEngine searchSerieEngine;
 
   public SearchSeries(SearchSerieEngine searchSerieEngine, SerieService serieService) {
-    super(
-        null, OperationId.SEARCH_SERIE.getOperationId(), OperationId.SEARCH_SERIE.getDescription());
+    super(OperationId.SEARCH_SERIE.getOperationId(), OperationId.SEARCH_SERIE.getDescription());
 
     this.searchSerieEngine = searchSerieEngine;
     this.serieService = serieService;
@@ -23,6 +23,6 @@ public class SearchSeries extends Command {
   public void executar() {
     final Optional<Serie> serie = this.searchSerieEngine.searchSerie();
 
-    serie.ifPresent(this.serieService::salvar);
+    serie.ifPresent(this.serieService::save);
   }
 }

@@ -1,7 +1,7 @@
 package br.com.alura.screenmatch.menu.command;
 
+import br.com.alura.screenmatch.service.ConsoleReader;
 import br.com.alura.screenmatch.service.SerieService;
-import java.util.Scanner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -10,21 +10,23 @@ import org.springframework.stereotype.Component;
 @Nome("Buscar Série Pelo Ator")
 public class SearchSeriesByActor extends Command {
   private final SerieService serieService;
+  private final ConsoleReader reader;
 
-  SearchSeriesByActor(Scanner scanner, SerieService serieService) {
+  SearchSeriesByActor(SerieService serieService, ConsoleReader reader) {
     super(
-        scanner,
+
         OperationId.SEARCH_BY_ACTOR.getOperationId(),
         OperationId.SEARCH_BY_ACTOR.getDescription());
     this.serieService = serieService;
+    this.reader = reader;
   }
 
   @Override
   public void executar() {
     System.out.println("Digite o nome de ator para abusca: ");
-    String nome = this.getString();
+    String nome = this.reader.getString();
     System.out.println("Deseja filtra as series por notas? (s/N)");
-    String filtro = this.getString();
+    String filtro = this.reader.getString();
     filtro = filtro.isEmpty() ? "n" : filtro;
 
     double rating = Double.NaN;
@@ -32,8 +34,9 @@ public class SearchSeriesByActor extends Command {
     if (filtro.equalsIgnoreCase("s") || filtro.equalsIgnoreCase("sim")) {
 
       System.out.println("Digite o nota minima: ");
-      rating = this.getDouble();
+      rating = this.reader.getDouble();
     }
-    this.serieService.findByNomeActor(nome, rating).forEach(System.out::println);
+
+    this.serieService.findSeriesByNomeActor(nome, rating).forEach(System.out::println);
   }
 }

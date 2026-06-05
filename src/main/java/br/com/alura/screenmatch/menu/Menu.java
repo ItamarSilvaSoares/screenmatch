@@ -3,20 +3,17 @@ package br.com.alura.screenmatch.menu;
 import br.com.alura.screenmatch.menu.command.Command;
 import br.com.alura.screenmatch.menu.command.CreatListCommand;
 import br.com.alura.screenmatch.menu.command.OperationId;
+import br.com.alura.screenmatch.service.ConsoleReader;
 import java.util.Comparator;
 import java.util.Map;
-import java.util.Scanner;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class Menu {
   private final CreatListCommand listCommand;
-  private final Scanner scanner;
-
-  public Menu(CreatListCommand listCommand, Scanner scanner) {
-    this.listCommand = listCommand;
-    this.scanner = scanner;
-  }
+  private final ConsoleReader reader;
 
   public void exibirMenu() {
     Map<String, Command> comandos = this.listCommand.create();
@@ -28,7 +25,7 @@ public class Menu {
           .sorted(Comparator.comparing(e -> Integer.parseInt(e.getKey())))
           .forEach((c) -> System.out.println(c.getValue()));
 
-      opcao = this.scanner.nextLine();
+      opcao = this.reader.getString();
 
       Command comando = comandos.get(opcao);
 
