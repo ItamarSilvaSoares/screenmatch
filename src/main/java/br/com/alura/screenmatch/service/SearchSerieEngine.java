@@ -1,12 +1,12 @@
 package br.com.alura.screenmatch.service;
 
+import br.com.alura.screenmatch.configuration.ApiProperties;
 import br.com.alura.screenmatch.model.ConverteDados;
 import br.com.alura.screenmatch.model.DadosSerie;
 import br.com.alura.screenmatch.model.DadosTemporada;
 import br.com.alura.screenmatch.model.Serie;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
 
@@ -16,18 +16,15 @@ public class SearchSerieEngine {
   private final ConsoleReader reader;
   private final ConsumoAPI consumo;
   private final ConverteDados conversor;
+  private final ApiProperties apiProp;
 
-  @Value("${API_KEY}")
-  private final String API_KEY;
-
-  @Value("${OMDB_API_URL}")
-  private final String API_URL;
-
-  public SearchSerieEngine(ConsoleReader reader, ConsumoAPI consumo, ConverteDados conversor) {
+  public SearchSerieEngine(ConsoleReader reader, ConsumoAPI consumo, ConverteDados conversor,
+      ApiProperties apiProp) {
 
     this.reader = reader;
     this.consumo = consumo;
     this.conversor = conversor;
+    this.apiProp = apiProp;
   }
 
   public Optional<Serie> searchSerie() {
@@ -57,7 +54,7 @@ public class SearchSerieEngine {
     String season =
         Optional.ofNullable(seasonSearch.getSeasonNumber()).map(num -> "&season=" + num).orElse("");
 
-    return this.API_URL + seasonSearch.getNomeSerie().replace(" ", "+") + season + this.API_KEY;
+    return this.apiProp.apiUrl() + seasonSearch.getNomeSerie().replace(" ", "+") + season + this.apiProp.apiKey();
   }
 
   private boolean isSerieValid(JsonNode jsonNode) {

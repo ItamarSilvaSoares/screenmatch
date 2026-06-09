@@ -1,6 +1,9 @@
 package br.com.alura.screenmatch.configuration;
 
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "api")
-public record ApiProperties(String apiKey, String apiUrl) {}
+@ConfigurationProperties(prefix = "app")
+public record ApiProperties(@NotBlank String apiKey, @NotBlank String apiUrl) {
+
+}
