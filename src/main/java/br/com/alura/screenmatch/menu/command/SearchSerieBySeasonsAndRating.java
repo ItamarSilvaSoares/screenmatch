@@ -1,11 +1,12 @@
 package br.com.alura.screenmatch.menu.command;
 
-import br.com.alura.screenmatch.service.ConsoleReader;
-import br.com.alura.screenmatch.service.SerieService;
+import br.com.alura.screenmatch.serie.service.SerieService;
+import br.com.alura.screenmatch.util.ConsoleReader;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SearchSerieBySeasonsAndRating extends Command {
+
   private final SerieService serieService;
   private final ConsoleReader reader;
 

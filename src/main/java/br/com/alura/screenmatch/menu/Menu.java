@@ -3,7 +3,7 @@ package br.com.alura.screenmatch.menu;
 import br.com.alura.screenmatch.menu.command.Command;
 import br.com.alura.screenmatch.menu.command.CreatListCommand;
 import br.com.alura.screenmatch.menu.command.OperationId;
-import br.com.alura.screenmatch.service.ConsoleReader;
+import br.com.alura.screenmatch.util.ConsoleReader;
 import java.util.Comparator;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 public class Menu {
+
   private final CreatListCommand listCommand;
   private final ConsoleReader reader;
 

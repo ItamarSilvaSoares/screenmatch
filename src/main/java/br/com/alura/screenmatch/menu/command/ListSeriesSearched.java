@@ -1,11 +1,12 @@
 package br.com.alura.screenmatch.menu.command;
 
-import br.com.alura.screenmatch.service.SerieService;
+import br.com.alura.screenmatch.serie.service.SerieService;
 import java.util.Comparator;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ListSeriesSearched extends Command {
+
   private final SerieService serieService;
 
   public ListSeriesSearched(SerieService serieService) {

@@ -1,7 +1,7 @@
 package br.com.alura.screenmatch.menu.command;
 
-import br.com.alura.screenmatch.service.ConsoleReader;
-import br.com.alura.screenmatch.service.SerieService;
+import br.com.alura.screenmatch.serie.service.SerieService;
+import br.com.alura.screenmatch.util.ConsoleReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Nome("Buscar Série Pelo Ator")
 public class SearchSeriesByActor extends Command {
+
   private final SerieService serieService;
   private final ConsoleReader reader;
 

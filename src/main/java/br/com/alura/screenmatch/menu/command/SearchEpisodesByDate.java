@@ -1,11 +1,12 @@
 package br.com.alura.screenmatch.menu.command;
 
-import br.com.alura.screenmatch.service.ConsoleReader;
-import br.com.alura.screenmatch.service.EpisodeService;
+import br.com.alura.screenmatch.episode.service.EpisodeService;
+import br.com.alura.screenmatch.util.ConsoleReader;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SearchEpisodesByDate extends Command {
+
   private final EpisodeService episodeService;
   private final ConsoleReader reader;
 

@@ -1,0 +1,13 @@
+package br.com.alura.screenmatch.episode.entity;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+
+public record DadosEpisodio(
+    @JsonAlias("Title") String titulo,
+    @JsonAlias("Episode") Integer numeroEpisodio,
+    @JsonAlias("imdbRating") String avaliacao,
+    @JsonAlias("Released") String dataLancamento
+) {
+
+
+}

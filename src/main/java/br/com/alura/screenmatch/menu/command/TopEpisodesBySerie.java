@@ -1,13 +1,14 @@
 package br.com.alura.screenmatch.menu.command;
 
-import br.com.alura.screenmatch.service.ConsoleReader;
-import br.com.alura.screenmatch.service.EpisodeService;
+import br.com.alura.screenmatch.episode.service.EpisodeService;
+import br.com.alura.screenmatch.util.ConsoleReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class TopEpisodesBySerie extends Command {
+
   private final EpisodeService episodeService;
   private final ConsoleReader reader;
 

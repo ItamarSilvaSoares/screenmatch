@@ -1,0 +1,92 @@
+package br.com.alura.screenmatch.serie.entity;
+
+import br.com.alura.screenmatch.episode.entity.Episodio;
+import br.com.alura.screenmatch.util.translation.ConsultaMyMemory;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.OptionalDouble;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@Table(name = "series")
+public class Serie {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long id;
+
+  @Column(unique = true)
+  private String titulo;
+
+  private Integer totalTemporadas;
+
+  private Double avaliacao;
+
+  @Enumerated(EnumType.STRING)
+  private Categoria genero;
+
+  @JdbcTypeCode(SqlTypes.ARRAY)
+  private List<String> atores;
+
+  private String poster;
+
+  private String sinopse;
+
+  @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @Setter(AccessLevel.NONE)
+  private List<Episodio> episodios = new ArrayList<>();
+
+  public Serie(DadosSerie dados) {
+    this.titulo = dados.titulo();
+    this.totalTemporadas = dados.totalTemporadas();
+    this.avaliacao = OptionalDouble.of(Double.parseDouble(dados.avaliacao())).orElse(0.0);
+    this.genero = Categoria.fromString(dados.genero().split(",")[0].trim());
+    this.atores = List.of(dados.atores().split(",\\s*"));
+
+    String sinopseTraduzida = ConsultaMyMemory.obterTraducao(dados.sinopse()).trim();
+    this.sinopse = sinopseTraduzida.isEmpty() ? dados.sinopse() : sinopseTraduzida;
+    this.poster = dados.poster();
+  }
+
+  @Override
+  public String toString() {
+    return "titulo: '"
+        + titulo
+        + '\''
+        + ", gênero: "
+        + genero
+        + '\''
+        + ", totalTemporadas: "
+        + totalTemporadas
+        + ", avaliação: "
+        + avaliacao
+        + '\'';
+
+  }
+
+  public void setEpisodios(List<Episodio> episodios) {
+    if (episodios != null) {
+      episodios.forEach(e -> e.setSerie(this));
+    }
+    this.episodios = episodios;
+  }
+}

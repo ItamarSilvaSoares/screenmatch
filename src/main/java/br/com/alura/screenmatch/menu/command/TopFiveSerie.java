@@ -1,12 +1,13 @@
 package br.com.alura.screenmatch.menu.command;
 
-import br.com.alura.screenmatch.model.Serie;
-import br.com.alura.screenmatch.service.SerieService;
+import br.com.alura.screenmatch.serie.entity.Serie;
+import br.com.alura.screenmatch.serie.service.SerieService;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TopFiveSerie extends Command {
+
   private final SerieService serieService;
 
   protected TopFiveSerie(SerieService serieService) {
