@@ -3,19 +3,19 @@ package br.com.alura.screenmatch.serie.service;
 import br.com.alura.screenmatch.serie.entity.Categoria;
 import br.com.alura.screenmatch.serie.entity.Serie;
 import br.com.alura.screenmatch.serie.repository.SerieRepository;
-import br.com.alura.screenmatch.serie.service.specification.SerieFilterService;
 import br.com.alura.screenmatch.util.QueryServiceHelper;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-@Component
 @Slf4j
+@Component
 public class SerieQueryService {
 
   private final SerieRepository repository;
@@ -33,10 +33,11 @@ public class SerieQueryService {
     return this.repository.findAll();
   }
 
-  public Optional<Serie> findByNameSerie(String nameSerie) {
+  public List<Serie> findByNameSerie(String nameSerie) {
     Specification<Serie> spec = SerieFilterService.tituloContensIgnoreCase(nameSerie);
 
-    return this.repository.findOne(spec);
+    return this.repository.findAll(spec);
+
   }
 
   public List<Serie> findByNomeActor(String nomeActor, Double rating) {
@@ -65,5 +66,14 @@ public class SerieQueryService {
     Sort sort = QueryServiceHelper.sort(Direction.DESC, "avaliacao");
 
     return this.repository.findAll(spec, sort);
+  }
+
+  public List<Serie> topFiveOrderByDate() {
+    return this.repository.findRecent(PageRequest.of(0, 5)).getContent();
+  }
+
+  public Optional<Serie> getSerieById(Long id) {
+    Specification<Serie> spec = SerieFilterService.filterById(id);
+    return this.repository.findOne(spec);
   }
 }

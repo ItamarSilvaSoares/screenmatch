@@ -1,6 +1,6 @@
 package br.com.alura.screenmatch.util;
 
-import br.com.alura.screenmatch.configuration.ApiProperties;
+import br.com.alura.screenmatch.config.ApiProperties;
 import br.com.alura.screenmatch.season.entity.DadosTemporada;
 import br.com.alura.screenmatch.serie.entity.DadosSerie;
 import br.com.alura.screenmatch.serie.entity.Serie;

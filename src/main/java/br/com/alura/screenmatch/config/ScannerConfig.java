@@ -1,4 +1,4 @@
-package br.com.alura.screenmatch.configuration;
+package br.com.alura.screenmatch.config;
 
 import java.util.Scanner;
 import org.springframework.context.annotation.Bean;

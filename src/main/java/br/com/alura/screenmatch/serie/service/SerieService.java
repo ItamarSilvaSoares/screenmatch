@@ -2,11 +2,13 @@ package br.com.alura.screenmatch.serie.service;
 
 import br.com.alura.screenmatch.episode.entity.Episodio;
 import br.com.alura.screenmatch.season.entity.DadosTemporada;
+import br.com.alura.screenmatch.serie.dto.SerieDto;
 import br.com.alura.screenmatch.serie.entity.Categoria;
 import br.com.alura.screenmatch.serie.entity.Serie;
 import br.com.alura.screenmatch.util.SearchSerieEngine;
 import br.com.alura.screenmatch.util.record.SeasonHelper;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -20,7 +22,7 @@ import org.springframework.stereotype.Service;
 public class SerieService {
 
   private final SearchSerieEngine searchSerieEngine;
-  private SerieQueryService serieQueryService;
+  private final SerieQueryService serieQueryService;
 
   public void save(Serie serie) {
     try {
@@ -36,19 +38,27 @@ public class SerieService {
     }
   }
 
-  public List<Serie> findAll() {
-    return this.serieQueryService.findAll();
+  public List<SerieDto> findAll() {
+    return toDto(this.serieQueryService.findAll());
+
   }
 
   public Optional<Serie> findSerieByName(String nomeSerie) {
 
-    Optional<Serie> serie = this.serieQueryService.findByNameSerie(nomeSerie);
+    List<Serie> series = this.serieQueryService.findByNameSerie(nomeSerie);
 
-    if (serie.isEmpty()) {
-      log.warn("Serie: {} não encontrado", nomeSerie);
+    if (series.size() > 1) {
+      log.warn("Mais de um resultado encontrado para o nome {}: {}", nomeSerie, series);
+      return Optional.empty();
     }
 
-    return serie;
+    Optional<Serie> result = series.stream().findFirst();
+
+    if (result.isEmpty()) {
+      log.warn("Serie: {} não encontrada", nomeSerie);
+    }
+
+    return result;
   }
 
   public void searchEpisodesSeries(String nomeSerie) {
@@ -68,9 +78,8 @@ public class SerieService {
                     .toList();
 
             s.setEpisodios(episodios);
-
-            this.serieQueryService.salvar(s);
           }
+          this.serieQueryService.salvar(s);
         });
   }
 
@@ -106,7 +115,37 @@ public class SerieService {
     return this.serieQueryService.findByNomeActor(nome, rating);
   }
 
-  public List<Serie> topFive() {
-    return this.serieQueryService.topFive();
+  public List<SerieDto> topFive() {
+    return toDto(this.serieQueryService.topFive());
   }
+
+  public List<SerieDto> topFiveOrderByDate() {
+    return toDto(this.serieQueryService.topFiveOrderByDate());
+  }
+
+  public SerieDto getById(Long id) {
+    Optional<Serie> optionalSerie = this.serieQueryService.getSerieById(id);
+
+    return optionalSerie.map(s -> toDto(List.of(s)).getFirst()).orElse(SerieDto.empty(id));
+
+  }
+
+  public List<SerieDto> getSeriesByCategory(String nomeGenero) {
+    Categoria categoria = Categoria.fromPortugues(nomeGenero);
+    List<Serie> series = this.serieQueryService.searchByCategory(categoria);
+    return toDto(series);
+  }
+
+  private List<SerieDto> toDto(List<Serie> series) {
+    if (series.isEmpty()) {
+      return Collections.emptyList();
+    }
+
+    return series.stream()
+        .map(s -> new SerieDto(s.getId(), s.getTitulo(), s.getTotalTemporadas(), s.getAvaliacao(),
+            s.getGenero(), String.join(", ", s.getAtores()), s.getPoster(), s.getSinopse()))
+        .toList();
+  }
+
 }
+

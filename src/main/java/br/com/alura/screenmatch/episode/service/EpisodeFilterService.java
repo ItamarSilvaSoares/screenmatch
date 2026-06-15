@@ -1,4 +1,4 @@
-package br.com.alura.screenmatch.episode.service.specifications;
+package br.com.alura.screenmatch.episode.service;
 
 import br.com.alura.screenmatch.episode.entity.Episodio;
 import br.com.alura.screenmatch.serie.entity.Serie;
@@ -21,12 +21,12 @@ public class EpisodeFilterService {
             .orElseGet(cb::conjunction);
   }
 
-  public static Specification<Episodio> filtroBySerie(Serie serie) {
+  public static Specification<Episodio> filtroBySerie(String serieName) {
     return (root, _, cb) -> {
       Join<Episodio, Serie> joinSerie = root.join("serie");
 
-      return Optional.ofNullable(serie)
-          .map(s -> cb.equal(joinSerie.get("titulo"), s.getTitulo()))
+      return Optional.ofNullable(serieName)
+          .map(s -> cb.equal(joinSerie.get("titulo"), s))
           .orElseGet(cb::conjunction);
     };
   }
@@ -41,5 +41,22 @@ public class EpisodeFilterService {
           .map(_ -> cb.between(root.get("dataLancamento"), inicio, fim))
           .orElseGet(cb::conjunction);
     };
+  }
+
+  public static Specification<Episodio> filtroBySerieId(Long serieId) {
+    return (root, _, cb) -> {
+      Join<Episodio, Serie> joinSerie = root.join("serie");
+
+      return Optional.ofNullable(serieId)
+          .map(s -> cb.equal(joinSerie.get("id"), s))
+          .orElseGet(cb::conjunction);
+    };
+  }
+
+  public static Specification<Episodio> filterBySeason(int episodeId) {
+    return ((root, _, cb) -> Optional.of(episodeId)
+        .filter(i -> !(i == 0))
+        .map(i -> cb.equal(root.get("temporada"), i))
+        .orElseGet(cb::conjunction));
   }
 }

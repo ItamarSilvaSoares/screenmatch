@@ -1,4 +1,4 @@
-package br.com.alura.screenmatch.configuration;
+package br.com.alura.screenmatch.config;
 
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -1,4 +1,4 @@
-package br.com.alura.screenmatch.serie.service.specification;
+package br.com.alura.screenmatch.serie.service;
 
 import br.com.alura.screenmatch.serie.entity.Categoria;
 import br.com.alura.screenmatch.serie.entity.Serie;
@@ -14,6 +14,14 @@ public class SerieFilterService {
             .filter(t -> !t.isBlank())
             .map(t -> cb.like(cb.lower(root.get("titulo")), "%" + t.toLowerCase() + "%"))
             .orElseGet(cb::conjunction);
+  }
+
+  public static Specification<Serie> filterById(long idSerie) {
+    return (root, _, cb) ->
+        Optional.of(idSerie)
+            .filter(l -> !(l < 0))
+            .map(l -> cb.equal(root.get("id"), l))
+            .orElseGet(() -> cb.equal(root.get("id"), 0));
   }
 
   public static Specification<Serie> seasonLessThanOrEqualTo(int seasons) {
@@ -53,6 +61,7 @@ public class SerieFilterService {
             .map(c -> cb.and(cb.equal(root.get("genero"), c)))
             .orElseGet(cb::conjunction);
   }
+
 
   public static Specification<Serie> conjunctionZero() {
     return (_, _, cb) -> cb.conjunction();

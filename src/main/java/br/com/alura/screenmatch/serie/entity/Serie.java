@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalDouble;
 import lombok.AccessLevel;
@@ -60,7 +61,9 @@ public class Serie {
     this.totalTemporadas = dados.totalTemporadas();
     this.avaliacao = OptionalDouble.of(Double.parseDouble(dados.avaliacao())).orElse(0.0);
     this.genero = Categoria.fromString(dados.genero().split(",")[0].trim());
-    this.atores = List.of(dados.atores().split(",\\s*"));
+    this.atores = Arrays.stream(dados.atores().split(","))
+        .map(String::trim)
+        .toList();
 
     String sinopseTraduzida = ConsultaMyMemory.obterTraducao(dados.sinopse()).trim();
     this.sinopse = sinopseTraduzida.isEmpty() ? dados.sinopse() : sinopseTraduzida;

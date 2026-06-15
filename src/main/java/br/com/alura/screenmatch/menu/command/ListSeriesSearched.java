@@ -18,7 +18,7 @@ public class ListSeriesSearched extends Command {
   public void executar() {
 
     this.serieService.findAll().stream()
-        .sorted(Comparator.comparing(s -> s.getGenero().name()))
+        .sorted(Comparator.comparing(s -> s.genero().name()))
         .forEach(System.out::println);
   }
 }
