@@ -2,7 +2,7 @@ package br.com.alura.screenmatch.menu.command;
 
 import br.com.alura.screenmatch.serie.entity.Serie;
 import br.com.alura.screenmatch.serie.service.SerieService;
-import br.com.alura.screenmatch.util.SearchSerieEngine;
+import br.com.alura.screenmatch.util.http.SeriesApiClient;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 
@@ -10,18 +10,18 @@ import org.springframework.stereotype.Component;
 public class SearchSeries extends Command {
 
   private final SerieService serieService;
-  private final SearchSerieEngine searchSerieEngine;
+  private final SeriesApiClient seriesApiClient;
 
-  public SearchSeries(SearchSerieEngine searchSerieEngine, SerieService serieService) {
+  public SearchSeries(SeriesApiClient seriesApiClient, SerieService serieService) {
     super(OperationId.SEARCH_SERIE.getOperationId(), OperationId.SEARCH_SERIE.getDescription());
 
-    this.searchSerieEngine = searchSerieEngine;
+    this.seriesApiClient = seriesApiClient;
     this.serieService = serieService;
   }
 
   @Override
   public void executar() {
-    final Optional<Serie> serie = this.searchSerieEngine.searchSerie();
+    final Optional<Serie> serie = this.seriesApiClient.searchSerie();
 
     serie.ifPresent(this.serieService::save);
   }

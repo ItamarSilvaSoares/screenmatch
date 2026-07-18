@@ -4,12 +4,13 @@ import br.com.alura.screenmatch.menu.Menu;
 import lombok.NonNull;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 
 @ConfigurationPropertiesScan
 @Deprecated
-//@SpringBootApplication
+@SpringBootApplication
 public class ScreenmatchApplicationOld implements CommandLineRunner {
 
   private final Menu menu;

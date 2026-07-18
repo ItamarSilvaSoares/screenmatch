@@ -3,7 +3,7 @@ package br.com.alura.screenmatch.serie.service;
 import br.com.alura.screenmatch.serie.entity.Categoria;
 import br.com.alura.screenmatch.serie.entity.Serie;
 import br.com.alura.screenmatch.serie.repository.SerieRepository;
-import br.com.alura.screenmatch.util.QueryServiceHelper;
+import br.com.alura.screenmatch.util.service.QueryServiceHelper;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;

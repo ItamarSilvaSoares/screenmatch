@@ -1,6 +1,7 @@
 package br.com.alura.screenmatch.serie.dto;
 
 import br.com.alura.screenmatch.serie.entity.Categoria;
+import br.com.alura.screenmatch.serie.entity.Serie;
 import java.io.Serializable;
 
 /**
@@ -16,6 +17,19 @@ public record SerieDto(
     String poster,
     String sinopse
 ) implements Serializable {
+
+  public SerieDto(Serie serie) {
+    this(
+        serie.getId(),
+        serie.getTitulo(),
+        serie.getTotalTemporadas(),
+        serie.getAvaliacao(),
+        serie.getGenero(),
+        String.join(", ", serie.getAtores()),
+        serie.getPoster(),
+        serie.getSinopse()
+    );
+  }
 
   public static SerieDto empty(long id) {
     return new SerieDto(

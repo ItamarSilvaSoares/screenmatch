@@ -1,9 +1,8 @@
 package br.com.alura.screenmatch.serie.entity;
 
 import br.com.alura.screenmatch.episode.entity.Episodio;
-import br.com.alura.screenmatch.util.translation.ConsultaMyMemory;
+import br.com.alura.screenmatch.util.http.translation.ConsultaMyMemory;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -13,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,14 +28,20 @@ import org.hibernate.type.SqlTypes;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "series")
+@Table(name = "series",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = DatabaseConstraints.UK_SERIE_TITULO,
+            columnNames = "titulo"
+        )
+    }
+)
 public class Serie {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @Column(unique = true)
   private String titulo;
 
   private Integer totalTemporadas;

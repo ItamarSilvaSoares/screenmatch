@@ -1,4 +1,4 @@
-package br.com.alura.screenmatch.util;
+package br.com.alura.screenmatch.util.date;
 
 import java.util.Scanner;
 import java.util.function.Function;

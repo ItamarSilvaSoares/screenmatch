@@ -5,7 +5,8 @@ import br.com.alura.screenmatch.season.entity.DadosTemporada;
 import br.com.alura.screenmatch.serie.dto.SerieDto;
 import br.com.alura.screenmatch.serie.entity.Categoria;
 import br.com.alura.screenmatch.serie.entity.Serie;
-import br.com.alura.screenmatch.util.SearchSerieEngine;
+import br.com.alura.screenmatch.serie.service.validations.ValidationNumberSeason;
+import br.com.alura.screenmatch.util.http.SeriesApiClient;
 import br.com.alura.screenmatch.util.record.SeasonHelper;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,21 +21,13 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class SerieService {
 
-  private final SearchSerieEngine searchSerieEngine;
+  private final SeriesApiClient seriesApiClient;
   private final SerieQueryService serieQueryService;
 
   public void save(Serie serie) {
-    try {
-      this.serieQueryService.salvar(serie);
+    this.serieQueryService.salvar(serie);
 
-      log.info("Serie salva com sucesso");
-
-    } catch (DataIntegrityViolationException e) {
-      String msg =
-          String.format(
-              "Erro ao salvar serie de dados, a serie %s já está no sistema.", serie.getTitulo());
-      log.error(msg);
-    }
+    log.info("Serie salva com sucesso");
   }
 
   public List<SerieDto> findAll() {
@@ -70,7 +62,7 @@ public class SerieService {
           for (int i = 1; i < s.getTotalTemporadas(); i++) {
 
             DadosTemporada dadosTemporada =
-                searchSerieEngine.searchEpisode(SeasonHelper.of(i, s.getTitulo()));
+                seriesApiClient.searchEpisode(SeasonHelper.of(i, s.getTitulo()));
             temporadas.add(dadosTemporada);
             List<Episodio> episodios =
                 temporadas.stream()
@@ -98,17 +90,7 @@ public class SerieService {
   public List<Serie> searchBySeasonsAndRating(int quantTemporadas, double avaliacaoMinima) {
 
     return this.serieQueryService.searchBySeasonsAndRating(
-        getNumberOfSeasons(quantTemporadas), avaliacaoMinima);
-  }
-
-  private int getNumberOfSeasons(int number) {
-    int quantTemporadas = 50;
-
-    if (number == 0) {
-      return quantTemporadas;
-    }
-
-    return number;
+        ValidationNumberSeason.getNumberOfSeasons(quantTemporadas), avaliacaoMinima);
   }
 
   public List<Serie> findSeriesByNomeActor(String nome, double rating) {
@@ -142,8 +124,7 @@ public class SerieService {
     }
 
     return series.stream()
-        .map(s -> new SerieDto(s.getId(), s.getTitulo(), s.getTotalTemporadas(), s.getAvaliacao(),
-            s.getGenero(), String.join(", ", s.getAtores()), s.getPoster(), s.getSinopse()))
+        .map(SerieDto::new)
         .toList();
   }
 

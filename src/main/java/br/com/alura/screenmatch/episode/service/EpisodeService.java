@@ -64,11 +64,7 @@ public class EpisodeService {
       return Collections.emptyList();
     }
     return episodios.stream()
-        .map(e -> new EpisodioDto(
-            e.getTemporada(),
-            e.getTitulo(),
-            e.getNumeroEpisodio(),
-            e.getAvaliacao()))
+        .map(EpisodioDto::new)
         .toList();
   }
 }

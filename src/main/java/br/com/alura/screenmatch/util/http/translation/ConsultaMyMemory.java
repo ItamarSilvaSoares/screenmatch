@@ -1,6 +1,6 @@
-package br.com.alura.screenmatch.util.translation;
+package br.com.alura.screenmatch.util.http.translation;
 
-import br.com.alura.screenmatch.util.ConsumoAPI;
+import br.com.alura.screenmatch.util.http.HttpClient;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ public class ConsultaMyMemory {
   public static String obterTraducao(String text) {
     ObjectMapper mapper = new ObjectMapper();
 
-    ConsumoAPI consumo = new ConsumoAPI();
+    HttpClient consumo = new HttpClient();
 
     String texto = URLEncoder.encode(text, StandardCharsets.UTF_8);
     String langPair = URLEncoder.encode("en|pt-br", StandardCharsets.UTF_8);

@@ -2,7 +2,7 @@ package br.com.alura.screenmatch.episode.service;
 
 import br.com.alura.screenmatch.episode.entity.Episodio;
 import br.com.alura.screenmatch.episode.repository.EpisodeRepository;
-import br.com.alura.screenmatch.util.QueryServiceHelper;
+import br.com.alura.screenmatch.util.service.QueryServiceHelper;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

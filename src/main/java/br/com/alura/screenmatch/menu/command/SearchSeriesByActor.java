@@ -1,7 +1,7 @@
 package br.com.alura.screenmatch.menu.command;
 
 import br.com.alura.screenmatch.serie.service.SerieService;
-import br.com.alura.screenmatch.util.ConsoleReader;
+import br.com.alura.screenmatch.util.date.ConsoleReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

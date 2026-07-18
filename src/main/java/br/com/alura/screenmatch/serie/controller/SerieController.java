@@ -4,6 +4,7 @@ import br.com.alura.screenmatch.serie.dto.SerieDto;
 import br.com.alura.screenmatch.serie.service.SerieService;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,29 +18,34 @@ public class SerieController {
   private SerieService serieService;
 
   @GetMapping
-  public List<SerieDto> listar() {
-    return this.serieService.findAll()
-        ;
+  public ResponseEntity<List<SerieDto>> listar() {
+    List<SerieDto> serieDtoList = this.serieService.findAll();
+    return ResponseEntity.ok().body(serieDtoList);
+
   }
 
   @GetMapping("/top5")
-  public List<SerieDto> listarTop5() {
-    return this.serieService.topFive();
+  public ResponseEntity<List<SerieDto>> listarTop5() {
+    List<SerieDto> serieDtoList = this.serieService.topFive();
+    return ResponseEntity.ok().body(serieDtoList);
   }
 
   @GetMapping("/lancamentos")
-  public List<SerieDto> obterLancamentos() {
-    return this.serieService.topFiveOrderByDate();
+  public ResponseEntity<List<SerieDto>> obterLancamentos() {
+    List<SerieDto> serieDtoList = this.serieService.topFiveOrderByDate();
+    return ResponseEntity.ok().body(serieDtoList);
   }
 
   @GetMapping("/{id}")
-  public SerieDto obterPorId(@PathVariable Long id) {
-    return this.serieService.getById(id);
+  public ResponseEntity<SerieDto> obterPorId(@PathVariable Long id) {
+    SerieDto serieDtoList = this.serieService.getById(id);
+    return ResponseEntity.ok().body(serieDtoList);
   }
 
   @GetMapping("/categoria/{nomeGenero}")
-  public List<SerieDto> obterPorNomeGenero(@PathVariable String nomeGenero) {
-    return this.serieService.getSeriesByCategory(nomeGenero);
+  public ResponseEntity<List<SerieDto>> obterPorNomeGenero(@PathVariable String nomeGenero) {
+    List<SerieDto> serieDtoList = this.serieService.getSeriesByCategory(nomeGenero);
+    return ResponseEntity.ok().body(serieDtoList);
   }
 
 }

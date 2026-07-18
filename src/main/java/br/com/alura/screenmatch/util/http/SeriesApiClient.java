@@ -1,9 +1,11 @@
-package br.com.alura.screenmatch.util;
+package br.com.alura.screenmatch.util.http;
 
 import br.com.alura.screenmatch.config.ApiProperties;
 import br.com.alura.screenmatch.season.entity.DadosTemporada;
 import br.com.alura.screenmatch.serie.entity.DadosSerie;
 import br.com.alura.screenmatch.serie.entity.Serie;
+import br.com.alura.screenmatch.util.date.ConsoleReader;
+import br.com.alura.screenmatch.util.date.ConverteDados;
 import br.com.alura.screenmatch.util.record.SeasonHelper;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -12,14 +14,14 @@ import tools.jackson.databind.JsonNode;
 
 @Slf4j
 @Component
-public class SearchSerieEngine {
+public class SeriesApiClient {
 
   private final ConsoleReader reader;
-  private final ConsumoAPI consumo;
+  private final HttpClient consumo;
   private final ConverteDados conversor;
   private final ApiProperties apiProp;
 
-  public SearchSerieEngine(ConsoleReader reader, ConsumoAPI consumo, ConverteDados conversor,
+  public SeriesApiClient(ConsoleReader reader, HttpClient consumo, ConverteDados conversor,
       ApiProperties apiProp) {
 
     this.reader = reader;

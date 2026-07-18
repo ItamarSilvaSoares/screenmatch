@@ -1,4 +1,4 @@
-package br.com.alura.screenmatch.util;
+package br.com.alura.screenmatch.util.date;
 
 import br.com.alura.screenmatch.util.interfaces.IConverteDados;
 import org.springframework.stereotype.Component;
