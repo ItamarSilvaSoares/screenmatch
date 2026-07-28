@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 @ConfigurationPropertiesScan
 public class ScreenmatchApplication {
 
+
   static void main(String[] args) {
     SpringApplication.run(ScreenmatchApplication.class, args);
   }

@@ -1,5 +1,6 @@
 package br.com.alura.screenmatch.exceptions.controller;
 
+import br.com.alura.screenmatch.exceptions.ICustomException;
 import br.com.alura.screenmatch.exceptions.enums.ConstraintErrorInfo;
 import br.com.alura.screenmatch.exceptions.service.ProblemFactory;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,12 +31,12 @@ public class ControllerExceptionHandlers {
             .map(constraint -> switch (constraint) {
               case UK_SERIE_TITULO ->
                   ResponseEntity.status(ConstraintErrorInfo.UK_SERIE_TITULO.getHttpStatus())
-                      .body(ProblemFactory.create(
+                      .body(ProblemFactory.constraintError(
                           ConstraintErrorInfo.UK_SERIE_TITULO,
                           request.getRequestURI()));
               case DEFAULT -> null;
             })
-            .orElseGet(() -> ResponseEntity.badRequest().body(ProblemFactory.create(
+            .orElseGet(() -> ResponseEntity.badRequest().body(ProblemFactory.constraintError(
                 ConstraintErrorInfo.DEFAULT,
                 request.getRequestURI())));
 
@@ -45,6 +46,17 @@ public class ControllerExceptionHandlers {
     }
 
     return ResponseEntity.internalServerError().build();
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ProblemDetail> categoryNotFound(Exception e) {
+    if (e instanceof ICustomException exception) {
+      ProblemDetail problemDetail = exception.getProblemDetail();
+      return ResponseEntity.badRequest().body(problemDetail);
+    }
+
+    return ResponseEntity.internalServerError().build();
+
   }
 
 }

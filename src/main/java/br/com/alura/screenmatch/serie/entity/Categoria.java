@@ -1,5 +1,6 @@
 package br.com.alura.screenmatch.serie.entity;
 
+import br.com.alura.screenmatch.exceptions.CategoryNotFoundException;
 import lombok.Getter;
 
 @Getter
@@ -27,8 +28,7 @@ public enum Categoria {
         return categoria;
       }
     }
-    throw new IllegalArgumentException(
-        "Nenhuma categoria encontrada para a string fornecida: " + text);
+    throw new CategoryNotFoundException(text);
   }
 
   public static Categoria fromPortugues(String text) {
@@ -37,7 +37,6 @@ public enum Categoria {
         return categoria;
       }
     }
-    throw new IllegalArgumentException(
-        "Nenhuma categoria encontrada para a string fornecida: " + text);
+    throw new CategoryNotFoundException(text);
   }
 }

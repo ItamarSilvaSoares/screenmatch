@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
 @Getter
-public enum ConstraintErrorInfo {
+public enum ConstraintErrorInfo implements  IErrorInfo  {
   UK_SERIE_TITULO(DatabaseConstraints.UK_SERIE_TITULO,
       HttpStatus.CONFLICT,
       "Série já cadastrada",

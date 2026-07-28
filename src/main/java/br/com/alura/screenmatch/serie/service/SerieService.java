@@ -59,30 +59,22 @@ public class SerieService {
     serie.ifPresent(
         s -> {
           List<DadosTemporada> temporadas = new ArrayList<>();
-          for (int i = 1; i < s.getTotalTemporadas(); i++) {
-
-            DadosTemporada dadosTemporada =
-                seriesApiClient.searchEpisode(SeasonHelper.of(i, s.getTitulo()));
-            temporadas.add(dadosTemporada);
-            List<Episodio> episodios =
-                temporadas.stream()
-                    .flatMap(d -> d.episodios().stream().map(e -> new Episodio(d.season(), e)))
-                    .toList();
-
-            s.setEpisodios(episodios);
+          for (int i = 1; i <= s.getTotalTemporadas(); i++) {
+            temporadas.add(this.seriesApiClient.searchEpisode(SeasonHelper.of(i, s.getTitulo())));
           }
+
+          List<Episodio> episodios =
+              temporadas.stream()
+                  .flatMap(d -> d.episodios().stream().map(e -> new Episodio(d.season(), e)))
+                  .toList();
+
+          s.setEpisodios(episodios);
           this.serieQueryService.salvar(s);
         });
   }
 
   public List<Serie> searchByCategory(String text) {
-    Categoria categoria = Categoria.EMPTY;
-    try {
-      categoria = Categoria.fromPortugues(text);
-
-    } catch (IllegalArgumentException e) {
-      log.error(e.getMessage());
-    }
+    Categoria categoria = Categoria.fromPortugues(text);
 
     return this.serieQueryService.searchByCategory(categoria);
   }
