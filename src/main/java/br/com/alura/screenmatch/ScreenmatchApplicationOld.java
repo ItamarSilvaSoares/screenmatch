@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @ConfigurationPropertiesScan
 @Deprecated
-@SpringBootApplication
+//@SpringBootApplication
 @AllArgsConstructor
 public class ScreenmatchApplicationOld implements CommandLineRunner {
 
